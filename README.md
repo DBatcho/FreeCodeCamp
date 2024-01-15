@@ -1,1 +1,1 @@
-Repository for all of FreeCodeCamp.com's Python code
+Repository for FreeCodeCamp.com's Python course
