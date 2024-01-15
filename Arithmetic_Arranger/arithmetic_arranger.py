@@ -125,12 +125,11 @@ def arithmetic_arranger (*args):
             index = index - 1
         arranged_problems += "    "
 
-    arranged_problems += "\n"
-
     #checks if user wants problem solved:
     #if yes, puts answers into fourth line of string
     index = 0
     if len(equals) > 0:
+        arranged_problems += "\n"
         for num in equals:
             arranged_problems += "  "
             if len(num) >= prob_len[index]:
