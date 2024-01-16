@@ -1,9 +1,34 @@
 def add_time(start, duration):
+    #hour
+    #min
+    #meridiem
+    #colonpos
+    #d_hour
+    #d_min
+
+    colonpos = start.find(':')
+    hour = start[0:colonpos].strip()
+    min = start[colonpos + 1:colonpos + 3].strip()
+    meridiem = start[colonpos + 3:].strip()
+    print ("Start Time:")
+    print (colonpos)
+    print (hour)
+    print (min)
+    print (meridiem)
+
+    colonpos = duration.find(':')
+    d_hour = duration[0:colonpos].strip()
+    d_min = duration[colonpos + 1:].strip()
+    print ("Duration Time:")
+    print (colonpos)
+    print (d_hour)
+    print (d_min)
 
 
 
 
 
+    new_time = "testing"
     return new_time
 
 print(add_time("11:06 PM", "2:02"))
