@@ -5,33 +5,55 @@ def add_time(start, duration):
     #colonpos
     #d_hour
     #d_min
+    count = 0
 
     colonpos = start.find(':')
-    hour = start[0:colonpos].strip()
-    min = start[colonpos + 1:colonpos + 3].strip()
+    hour = int(start[0:colonpos].strip())
+    min = int(start[colonpos + 1:colonpos + 3].strip())
     meridiem = start[colonpos + 3:].strip()
     print ("Start Time:")
-    print (colonpos)
     print (hour)
     print (min)
     print (meridiem)
 
     colonpos = duration.find(':')
-    d_hour = duration[0:colonpos].strip()
-    d_min = duration[colonpos + 1:].strip()
+    d_hour = int(duration[0:colonpos].strip())
+    d_min = int(duration[colonpos + 1:].strip())
     print ("Duration Time:")
-    print (colonpos)
     print (d_hour)
     print (d_min)
 
+    if (meridiem == "PM"):
+        count += 1
+    print (count)
 
+    min = min + d_min
+    if (min >= 60):
+        min -= 60
+        hour += 1
+    
+    if (hour == 12):
+        count += 1
+    
+    hour = hour + d_hour
+    if (hour > 12):
+        while hour > 12:
+            hour -= 12
+            count += 1
 
+    if (count % 2 == 0):
+        meridiem = "AM"
+    else:
+        meridiem = "PM"
 
+    min = str(min)
+    if (len(min) < 2):
+        min = "0" + min
 
-    new_time = "testing"
+    new_time = str(hour) + ":" + str(min) + " " + meridiem
     return new_time
 
-print(add_time("11:06 PM", "2:02"))
+print(add_time("11:59 PM", "24:05"))
 
 # below is all the test cases
 """
