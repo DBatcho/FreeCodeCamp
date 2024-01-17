@@ -1,4 +1,4 @@
-def add_time(start, duration):
+def add_time(start, duration, day=None):
     #hour
     #min
     #meridiem
@@ -60,10 +60,14 @@ def add_time(start, duration):
     if (len(min) < 2):
         min = "0" + min
     
-    if (dayslater == None):
-        new_time = str(hour) + ":" + str(min) + " " + meridiem
-    else:
+    if ((day != None) and (dayslater != None)):
+        new_time = str(hour) + ":" + str(min) + " " + meridiem + ", " + day + " " + dayslater
+    elif (day != None):
+        new_time = str(hour) + ":" + str(min) + " " + meridiem + ", " + day
+    elif (dayslater != None):
         new_time = str(hour) + ":" + str(min) + " " + meridiem + " " + dayslater
+    else:
+        new_time = str(hour) + ":" + str(min) + " " + meridiem 
 
     return new_time
 
