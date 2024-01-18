@@ -1,87 +1,119 @@
+"""
+Takes 2 parameters with an optional 3rd:
+-a start time in hours:minutes with AM/PM (meridiem)
+-a duration of time elapsed from start time in hours:minutes
+-OPTIONAL: a day of the week
+
+function will take parameters and output the new_time given the start time and duration of time given
+-if a day has passed since start time output will add "next day" to output
+-if multiple days passed since start time output will add "n days later", with n being the amount of days passed
+-if a day is provided output will include the day of the week after duration
+"""
 def add_time(start, duration, day=None):
-    #hour
-    #min
-    #meridiem
-    #colonpos
-    #d_hour
-    #d_min
-    count = 0
-    dayslater = None
 
-    if (day != None):
-        day = Day_of_Week(day = day.lower())
-        print (day)
-
+    #seperates the data from start time
     colonpos = start.find(':')
     hour = int(start[0:colonpos].strip())
     min = int(start[colonpos + 1:colonpos + 3].strip())
     meridiem = start[colonpos + 3:].strip()
 
-    print ("Start Time:")
-    print (hour)
-    print (min)
-    print (meridiem)
-
-
+    #seperates the data from duration time
     colonpos = duration.find(':')
     d_hour = int(duration[0:colonpos].strip())
     d_min = int(duration[colonpos + 1:].strip())
 
-    print ("Duration Time:")
-    print (d_hour)
-    print (d_min)
- 
+    #if day is provided assigns day variable to a number of corresponding day of the week
+    if (day != None):
+        day = Day_of_Week(day = day.lower())
 
-    if (meridiem == "PM"):
-        count += 1
+    """
+    AM_PMcount is used to determine the meridiem and how many days passed
+    if AM_PMcount is even it is AM, if odd it is PM
+    every 2 in AM_PMcount is a day
+    """
+    if (meridiem == "AM"):
+        AM_PMcount = 0
+    else:
+        AM_PMcount = 1
 
+    """
+    Calculates the minutes after duration is included
+    if greater then 60 removes 60 from minutes and adds 1 to hour
+    """
     min = min + d_min
     if (min >= 60):
         min -= 60
         hour += 1
-
-    hour = hour + d_hour
-    print (hour)
-    if (hour > 12):
-        while hour > 12:
-            hour -= 12
-            count += 1
     
-    if (hour == 12):
-        count += 1
-
-    if (count % 2 == 0):
-        meridiem = "AM"
-    else:
-        meridiem = "PM"
-    
-    if (count >= 4):
-        dayslater = "(" + str(count//2) + " days later)"
-    elif (count >= 2):
-        dayslater = "(next day)"
-
+    #if minutes are single digit, adds a "0" to the front
     min = str(min)
     if (len(min) < 2):
         min = "0" + min
 
-    if (day != None):
-        if ((day + ((count // 2) % 7)) > 7):
-            day = day + ((count // 2) % 7) - 7
-        else:
-            day = day + ((count // 2) % 7)
-        day = Day_of_Week(num = day)
+    """
+    Calculates the hours after duration is included
+    if hour is greater than 12, loop through hour removing 12 until hour < 12
+    each loop adds 1 to AM_PMcount because 12 hours went by
+    after loop is hour equals 12 add 1 to AM_PMcount
+    """
+    hour = hour + d_hour
+    if (hour >= 12):
+        while hour > 12:
+            hour -= 12
+            AM_PMcount += 1
+        if (hour == 12):
+            AM_PMcount += 1
+
+    #if AM_PMcount == even: meridiem = AM; odd: meridiem = PM
+    if (AM_PMcount % 2 == 0):
+        meridiem = "AM"
+    else:
+        meridiem = "PM"
     
-    if ((day != None) and (dayslater != None)):
-        new_time = str(hour) + ":" + str(min) + " " + meridiem + ", " + day + " " + dayslater
+    #every 2 in AM_PMcount is a day
+    numdays = AM_PMcount // 2
+
+    """
+    to find how many days passed find the remainder of numdays
+    if greater than 7, remove 7 from day number plus days passed
+    else (if less than 7), add day to the remainder of days
+    pass the number to the Day_Of_Week function to get the corresponding day
+    """
+    if (day != None):
+        if ((day + (numdays % 7)) > 7):
+            day = day + (numdays % 7) - 7
+        else:
+            day = day + (numdays % 7)
+        day = Day_of_Week(num = day)
+
+    """
+    if numdays is more than 2, change to "(n days later)"
+    if numdays is >=1, change numdays to "(next day)"
+    else numdays is None
+    """
+    if (numdays >= 2):
+        numdays = "(" + str(numdays) + " days later)"
+    elif (numdays >= 1):
+        numdays = "(next day)"
+    else:
+        numdays = None
+    
+    #combines all the data for the correct output. Determines what should be included based on data given
+    if ((day != None) and (numdays != None)):
+        new_time = str(hour) + ":" + str(min) + " " + meridiem + ", " + day + " " + numdays
     elif (day != None):
         new_time = str(hour) + ":" + str(min) + " " + meridiem + ", " + day
-    elif (dayslater != None):
-        new_time = str(hour) + ":" + str(min) + " " + meridiem + " " + dayslater
+    elif (numdays != None):
+        new_time = str(hour) + ":" + str(min) + " " + meridiem + " " + numdays
     else:
         new_time = str(hour) + ":" + str(min) + " " + meridiem 
 
     return new_time
 
+"""
+Given one of the optional parameters:
+function will return either the number assigned to the day or the day assigned to the number
+"""
 def Day_of_Week(num = None, day = None):
     if (num == None):
         if (day == "monday"):
