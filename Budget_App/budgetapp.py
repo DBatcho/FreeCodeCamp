@@ -21,10 +21,21 @@ class Category:
             
     def get_balance (self):
         balance = 0
+        print (self.name)
         for i in self.ledger:
+            print (i)
             balance += i["amount"]
         return balance
     
+    def transfer (self, amount, category):
+        if (self.get_funds(amount) == True):
+            self.withdraw(amount, "Transfer to " + category.name)
+            category.deposit(amount, "Transfer from " + self.name + ".")
+            return True
+        else:
+            return False
+
+
     def get_funds (self, amount):
         if (self.get_balance() > amount):
             return True
@@ -40,13 +51,14 @@ food = Category("Food")
 food.deposit(1000, "initial deposit")
 food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restaurant and more food for dessert")
-food.withdraw(2000)
 print(food.get_balance())
-"""
+
 clothing = Category("Clothing")
 food.transfer(50, clothing)
 clothing.withdraw(25.55)
 clothing.withdraw(100)
+print(clothing.get_balance())
+"""
 auto = Category("Auto")
 auto.deposit(1000, "initial deposit")
 auto.withdraw(15)
