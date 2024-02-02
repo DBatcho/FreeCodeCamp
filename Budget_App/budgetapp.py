@@ -8,14 +8,28 @@ class Category:
              self.ledger.append({"amount":amount, "description":""})
         else:
             self.ledger.append({"amount":amount, "description":description})
-        print (self.ledger[0]["amount"])
     
     def withdraw (self, amount, description = None):
-        if (description == None):
-             self.ledger.append({"amount":-amount, "description":""})
+        if (self.get_funds(amount) == True):
+            if (description == None):
+                self.ledger.append({"amount":-amount, "description":""})
+            else:
+                self.ledger.append({"amount":-amount, "description":description})
+            return True
         else:
-            self.ledger.append({"amount":-amount, "description":description})
-        #needs to return TRUE if withdraw took place or FALSE if it didn't
+            return False
+            
+    def get_balance (self):
+        balance = 0
+        for i in self.ledger:
+            balance += i["amount"]
+        return balance
+    
+    def get_funds (self, amount):
+        if (self.get_balance() > amount):
+            return True
+        else:
+            return False
         
 
 def create_spend_chart(categories):
@@ -26,8 +40,9 @@ food = Category("Food")
 food.deposit(1000, "initial deposit")
 food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restaurant and more food for dessert")
-"""
+food.withdraw(2000)
 print(food.get_balance())
+"""
 clothing = Category("Clothing")
 food.transfer(50, clothing)
 clothing.withdraw(25.55)
